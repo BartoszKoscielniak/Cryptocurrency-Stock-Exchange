@@ -1,10 +1,16 @@
 package com.example.cryptoexchange.user;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.Collections;
 
 @Entity
 @Table
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(
             strategy = GenerationType.IDENTITY
@@ -16,6 +22,10 @@ public class User {
     private String contactNumber;
     private String emial;
     private String password;
+    @Enumerated(EnumType.STRING)
+    private UserRole userRole;
+    private Boolean locked;
+    private Boolean enabled;
 
     public User( ) {
     }
@@ -77,8 +87,39 @@ public class User {
         this.emial = emial;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities( ) {
+        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(userRole.name());
+        return Collections.singletonList(simpleGrantedAuthority);
+    }
+
     public String getPassword( ) {
         return password;
+    }
+
+    @Override
+    public String getUsername( ) {
+        return firstName + " " + lastName;
+    }
+
+    @Override
+    public boolean isAccountNonExpired( ) {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked( ) {
+        return !locked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired( ) {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled( ) {
+        return enabled;
     }
 
     public void setPassword(String password) {

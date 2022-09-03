@@ -1,6 +1,9 @@
 package com.example.cryptoexchange.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -9,9 +12,10 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final static String USER_NOT_FOUND = "User with email: %s not found";
 
     @Autowired
     public UserService(UserRepository userRepository) {
@@ -66,5 +70,11 @@ public class UserService {
 
             user.setEmial(email);
         }
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String emial) throws UsernameNotFoundException {
+        return userRepository.findUserByEmial(emial)
+                .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND, emial)));
     }
 }
