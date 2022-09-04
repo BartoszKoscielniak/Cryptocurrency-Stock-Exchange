@@ -1,5 +1,7 @@
 package com.example.cryptoexchange.user;
 
+import com.example.cryptoexchange.userregistration.token.ConfirmationToken;
+import com.example.cryptoexchange.userregistration.token.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,9 +11,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -20,6 +24,7 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final static String USER_NOT_FOUND = "User with email: %s not found";
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final ConfirmationTokenService confirmationTokenService;
 
     public List<User> getUsers(){
         return userRepository.findAll();
@@ -81,6 +86,9 @@ public class UserService implements UserDetailsService {
         boolean userExist = userRepository.findUserByEmial(user.getEmial()).isPresent();
 
         if (userExist) {
+            //TODO: check if attributes are the same
+            //TODO: if email not confirmed send confirmation emial
+
             throw new IllegalStateException("Email: " + String.format(user.getEmial()) + " already exist");
         }
 
@@ -90,8 +98,22 @@ public class UserService implements UserDetailsService {
 
         userRepository.save(user);
 
-        //TODO: send confirmation token
+        String token = UUID.randomUUID().toString();
+        ConfirmationToken confirmationToken = new ConfirmationToken(
+                token,
+                LocalDateTime.now(),
+                LocalDateTime.now().plusMinutes(15),
+                user
+        );
 
-        return "kinda works";
+        confirmationTokenService.saveConfirmationToken(confirmationToken);
+
+        //TODO: send email
+
+        return token;
+    }
+
+    public int enableAppUser(String email) {
+        return userRepository.enableAppUser(email);
     }
 }
