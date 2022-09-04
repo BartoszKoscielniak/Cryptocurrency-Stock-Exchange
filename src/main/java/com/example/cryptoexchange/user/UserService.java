@@ -1,9 +1,11 @@
 package com.example.cryptoexchange.user;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -12,15 +14,12 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final static String USER_NOT_FOUND = "User with email: %s not found";
-
-    @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public List<User> getUsers(){
         return userRepository.findAll();
@@ -76,5 +75,23 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String emial) throws UsernameNotFoundException {
         return userRepository.findUserByEmial(emial)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND, emial)));
+    }
+
+    public String signUpUser(User user) {
+        boolean userExist = userRepository.findUserByEmial(user.getEmial()).isPresent();
+
+        if (userExist) {
+            throw new IllegalStateException("Email: " + String.format(user.getEmial()) + " already exist");
+        }
+
+        String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
+
+        user.setPassword(encodedPassword);
+
+        userRepository.save(user);
+
+        //TODO: send confirmation token
+
+        return "kinda works";
     }
 }
