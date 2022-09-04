@@ -17,7 +17,9 @@ public class UserConfig {
                     "Koscielniak",
                     "123456789",
                     "email@email.com",
-                    "password"
+                    "password",
+                    UserRole.USER,
+                    true
             );
 
             User Adam = new User(
@@ -25,7 +27,9 @@ public class UserConfig {
                     "Kac",
                     "987654321",
                     "email2@email2.com",
-                    "password2"
+                    "password2",
+                    UserRole.USER,
+                    true
             );
 
             repository.saveAll(

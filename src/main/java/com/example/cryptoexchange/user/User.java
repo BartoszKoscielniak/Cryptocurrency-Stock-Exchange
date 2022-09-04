@@ -56,6 +56,16 @@ public class User implements UserDetails {
         this.userRole = userRole;
     }
 
+    public User(String firstName, String lastName, String contactNumber, String emial, String password, UserRole userRole, Boolean enabled) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.contactNumber = contactNumber;
+        this.emial = emial;
+        this.password = password;
+        this.userRole = userRole;
+        this.enabled = enabled;
+    }
+
     public Long getId( ) {
         return id;
     }
