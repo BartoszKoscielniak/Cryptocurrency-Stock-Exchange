@@ -24,8 +24,8 @@ public class User implements UserDetails {
     private String password;
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
-    private Boolean locked;
-    private Boolean enabled;
+    private Boolean locked = false;
+    private Boolean enabled = false;
 
     public User( ) {
     }
@@ -45,6 +45,15 @@ public class User implements UserDetails {
         this.contactNumber = contactNumber;
         this.emial = emial;
         this.password = password;
+    }
+
+    public User(String firstName, String lastName, String contactNumber, String emial, String password, UserRole userRole) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.contactNumber = contactNumber;
+        this.emial = emial;
+        this.password = password;
+        this.userRole = userRole;
     }
 
     public Long getId( ) {
@@ -87,6 +96,30 @@ public class User implements UserDetails {
         this.emial = emial;
     }
 
+    public UserRole getUserRole( ) {
+        return userRole;
+    }
+
+    public void setUserRole(UserRole userRole) {
+        this.userRole = userRole;
+    }
+
+    public Boolean getLocked( ) {
+        return locked;
+    }
+
+    public void setLocked(Boolean locked) {
+        this.locked = locked;
+    }
+
+    public Boolean getEnabled( ) {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities( ) {
         SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(userRole.name());
@@ -99,7 +132,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername( ) {
-        return firstName + " " + lastName;
+        return emial;
     }
 
     @Override
