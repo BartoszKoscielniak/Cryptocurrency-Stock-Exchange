@@ -19,12 +19,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserService userService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    private static final String[] AUTH_WHITELIST = {
+            // -- Swagger UI v3 (OpenAPI)
+            "/v3/api-docs/**",
+            "/swagger-ui/**",
+            // other public endpoints
+            "/api/registration/**"
+    };
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.
                 csrf().disable()
                 .authorizeRequests()
-                    .antMatchers("/api/registration/**")
+                    .antMatchers(AUTH_WHITELIST)
                     .permitAll()
                 .anyRequest()
                 .authenticated().and()
