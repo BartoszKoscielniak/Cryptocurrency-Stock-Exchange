@@ -4,6 +4,7 @@ import com.example.cryptoexchange.user.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -32,8 +33,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.
                 csrf().disable()
                 .authorizeRequests()
-                    .antMatchers(AUTH_WHITELIST)
-                    .permitAll()
+                .antMatchers(AUTH_WHITELIST).permitAll()
+                .antMatchers(HttpMethod.GET, "/js/**", "/css/**", "/img/**").permitAll()
+                .antMatchers("/admin/**").hasRole(UserRole.ADMIN.name())
+                .antMatchers("/login*").permitAll()
                 .anyRequest()
                 .authenticated().and()
                 .formLogin();
