@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Octopus Exchange</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link th:href="@{/css/login.css}"  rel="stylesheet">
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-md navbar-dark" style="width: 100%;position:fixed; overflow: hidden; top:0; background-color:transparent;">
+
+    <img th:src="@{/img/octopuslogo.png}" width="50px" height="40px">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav">
+            <li class="nav-item" style="margin-left:5%">
+                <button style="width:80px" type="button" class="btn btn-outline-success" data-target="#myModal" data-toggle="modal">Join</button>
+            </li>
+            <li class="nav-item" style="margin-left:5%">
+                <button style="width:80px" type="button" class="btn btn-outline-danger" data-target="#myMod" data-toggle="modal">Log In</button>
+            </li>
+
+
+        </ul>
+    </div>
+</nav>
+<br>
+
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog cascading-modal" role="document">
+        <!--Content-->
+        <div class="modal-content">
+            <div class="modal-body mb-1">
+
+                <form method="post">
+                    <h2>Register</h2>
+
+                    <label class="napis" style="user-select: none">Name</label><br>
+                    <input class="form-control text" type="text" value="" placeholder="Enter Name" name="name" required /><br>
+            <label class="napis" style="user-select: none">Surname</label><br>
+            <input class="form-control text" type="text" value="" placeholder="Enter Surname" name="surname" required><br>
+        <label class="napis" style="user-select: none">Email</label><br>
+        <input class="form-control text" type="text" value="" placeholder="Enter Email" name="emailRegister" required><br>
+    <label class="napis" style="user-select: none">Phone Number</label><br>
+    <input class="form-control text" style="margin-bottom:0%;" type="text" value="" placeholder="Enter Phone Number" name="phone_number" required><br>
+
+<label class="napis" style="user-select: none">Password</label><br>
+
+
+
+
+<input class="form-control text" type="password" value="" placeholder="Enter Password" name="password1" required><br>
+
+<label class="napis" style="user-select: none">Repeat password</label><br>
+<input class="form-control text" type="password" value="" placeholder="Repeat Password" name="password2" required><br>
+<label style="user-select: none">
+    <input type="checkbox" name="regulations" value="" /> I have read and agree to the Terms of Service.<br>
+</label>
+<br>
+
+<!--Footer-->
+<div class="modal-footer">
+    <img th:src="@{/img/octopuslogo.png}" width="50px" height="40px">
+
+    <button style="width:70px" type="submit" class="btn btn-outline-success">Join</button>
+</div>
+
+</form>
+
+</div>
+
+</div>
+</div>
+</div>
+
+<div id="myMod" class="modal fade">
+    <div class="modal-dialog modal-login">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Login</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form name="loginForm" th:action="@{/api/login}" method="post">
+                    <input class="form-control text" type="text" placeholder="Enter Email" id="username" name="username" required><br>
+                    <input class="form-control text" type="password" placeholder="Enter Password" id="password" name="password" required><br>
+                    <div th:if="${param.error}" class="alert alert-error" >Invalid e-mail or password</div>
+                    <div class="modal-footer">
+                        <img th:src="@{/img/octopuslogo.png}" width="50px" height="40px">
+                        <button type="submit" class="btn btn-outline-danger" id="login">Login</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<section>
+    <img th:src="@{/img/background1.png}" style="width:100%; height:70%; margin-top: -15%;">
+</section>
+<section>
+    <img th:src="@{/img/background2.png}" style="width:100%; ">
+</section>
+<section>
+    <img th:src="@{/img/background3.png}" style="width:100%; margin-top:-10%">
+</section>
+<section style="background-color: #525f7f; width:100%; height: 120px">
+    <div style="text-align: center;">
+        <img th:src="@{/img/octopuslogo.png}" width="80px" height="60px" style="margin: 1%;">
+        <span style=" color:#fff; font-size: 36px; font-weight: bold; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif">Octopus</span>
+    </div>
+</section>
+</body>
+</html>
+
+<script type="text/javascript" th:src="@{/js/login.js}"></script>
