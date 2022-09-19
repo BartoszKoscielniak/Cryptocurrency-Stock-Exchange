@@ -3,7 +3,7 @@ package com.example.cryptoexchange.user;
 import com.example.cryptoexchange.userregistration.token.ConfirmationToken;
 import com.example.cryptoexchange.userregistration.token.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,32 +12,19 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
-    private final static String USER_NOT_FOUND = "User with email: %s not found";
+    private final static String USER_NOT_FOUND = "User: %s not found";
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ConfirmationTokenService confirmationTokenService;
 
     public List<User> getUsers(){
         return userRepository.findAll();
-    }
-
-    public void registerUser(User user) {
-        Optional<User> userByEmail = userRepository.findUserByEmial(user.getEmial());
-
-        if (userByEmail.isPresent()){
-            throw new IllegalStateException("email taken");
-        }
-
-        userRepository.save(user);
     }
 
     public void deleteUser(Long id) {
@@ -65,31 +52,34 @@ public class UserService implements UserDetailsService {
             user.setContactNumber(contactNumber);
         }
 
-        if (email != null && email.length() > 0 && !Objects.equals(user.getEmial(), email)){
-            Optional<User> userOptional = userRepository.findUserByEmial(email);
+        if (email != null && email.length() > 0 && !Objects.equals(user.getUsername(), email)){
+            Optional<User> userOptional = userRepository.findUserByUsername(email);
 
             if (userOptional.isPresent()){
                 throw new IllegalStateException("Email taken!");
             }
 
-            user.setEmial(email);
+            user.setUsername(email);
         }
     }
 
     @Override
-    public UserDetails loadUserByUsername(String emial) throws UsernameNotFoundException {
-        return userRepository.findUserByEmial(emial)
-                .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND, emial)));
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository
+                .findUserByUsername(username)
+                .orElseThrow(() ->
+                        new UsernameNotFoundException(String.format(USER_NOT_FOUND, username))
+                );
     }
 
     public String signUpUser(User user) {
-        boolean userExist = userRepository.findUserByEmial(user.getEmial()).isPresent();
+        boolean userExist = userRepository.findUserByUsername(user.getUsername()).isPresent();
 
         if (userExist) {
             //TODO: check if attributes are the same
             //TODO: if email not confirmed send confirmation emial
 
-            throw new IllegalStateException("Email: " + String.format(user.getEmial()) + " already exist");
+            throw new IllegalStateException("Email: " + String.format(user.getUsername()) + " already exist");
         }
 
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
@@ -113,7 +103,7 @@ public class UserService implements UserDetailsService {
         return token;
     }
 
-    public int enableAppUser(String email) {
+/*    public int enableAppUser(String email) {
         return userRepository.enableAppUser(email);
-    }
+    }*/
 }

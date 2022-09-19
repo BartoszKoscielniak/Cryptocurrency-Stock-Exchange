@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table
@@ -21,12 +23,15 @@ public class User implements UserDetails {
     private String firstName;
     private String lastName;
     private String contactNumber;
-    private String emial;
+    private String username;
     private String password;
-    @Enumerated(EnumType.STRING)
+
+    @Enumerated
     private UserRole userRole;
-    private Boolean locked = false;
-    private Boolean enabled = false;
+    private boolean isAccountNonExpired;
+    private boolean isAccountNonLocked;
+    private boolean isCredentialsNonExpired;
+    private boolean isEnabled;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
@@ -35,40 +40,36 @@ public class User implements UserDetails {
     public User( ) {
     }
 
-    public User(Long id, String firstName, String lastName, String contactNumber, String emial, String password) {
+    public User(Long id, String firstName, String lastName, String contactNumber, String username, String password) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.contactNumber = contactNumber;
-        this.emial = emial;
+        this.username = username;
         this.password = password;
     }
 
-    public User(String firstName, String lastName, String contactNumber, String emial, String password) {
+    public User(String firstName, String lastName, String contactNumber, String username, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.contactNumber = contactNumber;
-        this.emial = emial;
+        this.username = username;
         this.password = password;
     }
 
-    public User(String firstName, String lastName, String contactNumber, String emial, String password, UserRole userRole) {
+    public User(String firstName, String lastName, String contactNumber, String username, String password,
+                UserRole userRole, boolean isAccountNonExpired,
+                boolean isAccountNonLocked, boolean isCredentialsNonExpired, boolean isEnabled) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.contactNumber = contactNumber;
-        this.emial = emial;
+        this.username = username;
         this.password = password;
         this.userRole = userRole;
-    }
-
-    public User(String firstName, String lastName, String contactNumber, String emial, String password, UserRole userRole, Boolean enabled) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.contactNumber = contactNumber;
-        this.emial = emial;
-        this.password = password;
-        this.userRole = userRole;
-        this.enabled = enabled;
+        this.isAccountNonExpired = isAccountNonExpired;
+        this.isAccountNonLocked = isAccountNonLocked;
+        this.isCredentialsNonExpired = isCredentialsNonExpired;
+        this.isEnabled = isEnabled;
     }
 
     public Long getId( ) {
@@ -103,36 +104,8 @@ public class User implements UserDetails {
         this.contactNumber = contactNumber;
     }
 
-    public String getEmial( ) {
-        return emial;
-    }
-
-    public void setEmial(String emial) {
-        this.emial = emial;
-    }
-
-    public UserRole getUserRole( ) {
-        return userRole;
-    }
-
-    public void setUserRole(UserRole userRole) {
-        this.userRole = userRole;
-    }
-
-    public Boolean getLocked( ) {
-        return locked;
-    }
-
-    public void setLocked(Boolean locked) {
-        this.locked = locked;
-    }
-
-    public Boolean getEnabled( ) {
-        return enabled;
-    }
-
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
+    public void setUsername(String emial) {
+        this.username = emial;
     }
 
     public Wallet getWallet( ) {
@@ -143,10 +116,8 @@ public class User implements UserDetails {
         this.wallet = wallet;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities( ) {
-        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(userRole.name());
-        return Collections.singletonList(simpleGrantedAuthority);
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getPassword( ) {
@@ -154,32 +125,33 @@ public class User implements UserDetails {
     }
 
     @Override
+    public Collection<? extends GrantedAuthority> getAuthorities( ) {
+        return userRole.getGrantedAuthorities();
+    }
+
+    @Override
     public String getUsername( ) {
-        return emial;
+        return username;
     }
 
     @Override
     public boolean isAccountNonExpired( ) {
-        return true;
+        return isAccountNonExpired;
     }
 
     @Override
     public boolean isAccountNonLocked( ) {
-        return !locked;
+        return isAccountNonLocked;
     }
 
     @Override
     public boolean isCredentialsNonExpired( ) {
-        return true;
+        return isCredentialsNonExpired;
     }
 
     @Override
     public boolean isEnabled( ) {
-        return enabled;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+        return isEnabled;
     }
 
     @Override
@@ -189,7 +161,7 @@ public class User implements UserDetails {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", contactNumber='" + contactNumber + '\'' +
-                ", emial='" + emial + '\'' +
+                ", emial='" + username + '\'' +
                 ", password='" + password + '\'' +
                 '}';
     }

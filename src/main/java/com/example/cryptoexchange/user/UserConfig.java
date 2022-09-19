@@ -1,13 +1,20 @@
 package com.example.cryptoexchange.user;
 
+import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
 
+import static com.example.cryptoexchange.user.UserRole.USER;
+
 @Configuration
+@AllArgsConstructor
 public class UserConfig {
+
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Bean
     CommandLineRunner commandLineRunner (UserRepository repository) {
@@ -17,8 +24,11 @@ public class UserConfig {
                     "Koscielniak",
                     "123456789",
                     "email@email.com",
-                    "password",
-                    UserRole.USER,
+                    bCryptPasswordEncoder.encode("password1"),
+                    USER,
+                    true,
+                    true,
+                    true,
                     true
             );
 
@@ -27,8 +37,11 @@ public class UserConfig {
                     "Kac",
                     "987654321",
                     "email2@email2.com",
-                    "password2",
-                    UserRole.USER,
+                    bCryptPasswordEncoder.encode("password2"),
+                    USER,
+                    true,
+                    true,
+                    true,
                     true
             );
 
