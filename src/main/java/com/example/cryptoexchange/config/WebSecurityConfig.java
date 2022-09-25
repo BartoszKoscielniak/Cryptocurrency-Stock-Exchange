@@ -37,19 +37,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()//Use in browser apps, disable in non-browser apps
-                .sessionManagement()
+/*                .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .addFilter(new AuthenticationFilter(authenticationManager()))
-                .addFilterAfter(new JwtAuthorizationFilter(), AuthenticationFilter.class)
+                .addFilterAfter(new JwtAuthorizationFilter(), AuthenticationFilter.class)*/
                 .authorizeRequests()
-                .antMatchers("index", "/", "/js/**", "/css/**", "/img/**").permitAll()//can make index page to be seen by everyone
+                .antMatchers("index", "/", "/js/**", "/css/**", "/img/**", "/v3/api-docs/**", "/swagger-ui/**").permitAll()//can make index page to be seen by everyone
                 .antMatchers("/api/wallet/**").hasRole(USER.name())
                 .antMatchers("/api/transactions/**").hasRole(USER.name())
                 .antMatchers(HttpMethod.GET,"/api/user/**").hasAuthority(USER_READ.name())
                 .anyRequest()
                 .authenticated()
-/*                .and()
+                .and()
                 .formLogin()
                     .loginPage("/login")
                     .permitAll()
@@ -63,7 +63,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .clearAuthentication(true)
                     .invalidateHttpSession(true)
                     .deleteCookies("JSESSIONID")
-                    .logoutSuccessUrl("/login")*/;
+                    .logoutSuccessUrl("/login");
     }
 
     @Override

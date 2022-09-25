@@ -10,6 +10,6 @@ public class EmailValidation implements Predicate {
     @Override
     public boolean test(Object o) {
         //TODO: email valid
-        return false;
+        return true;
     }
 }
