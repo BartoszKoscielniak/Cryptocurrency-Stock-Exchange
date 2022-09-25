@@ -17,4 +17,19 @@ public class TemplateController {
     public String getHomeView(){
         return "home";
     }
+
+    @GetMapping("buysell")
+    public String getBuySellView(){
+        return "buyorsell";
+    }
+
+    @GetMapping("history")
+    public String getHistoryView(){
+        return "history";
+    }
+
+    @GetMapping("wallet")
+    public String getWalletView(){
+        return "wallet";
+    }
 }
