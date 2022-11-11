@@ -20,8 +20,7 @@ import static com.example.cryptoexchange.user.UserPermissions.USER_READ;
 import static com.example.cryptoexchange.user.UserRole.USER;
 
 @Configuration
-@EnableWebSecurity/*TODO: use when using preauthorize annotations in controller
-@EnableGlobalMethodSecurity(prePostEnabled = true) */
+@EnableWebSecurity/*TODO: use when using preauthorize annotations in controller */
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final PasswordEncoder passwordEncoder;
@@ -37,19 +36,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()//Use in browser apps, disable in non-browser apps
-/*                .sessionManagement()
+                .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .addFilter(new AuthenticationFilter(authenticationManager()))
-                .addFilterAfter(new JwtAuthorizationFilter(), AuthenticationFilter.class)*/
+                .addFilterAfter(new JwtAuthorizationFilter(), AuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers("index", "/", "/js/**", "/css/**", "/img/**", "/v3/api-docs/**", "/swagger-ui/**").permitAll()//can make index page to be seen by everyone
                 .antMatchers("/api/wallet/**").hasRole(USER.name())
                 .antMatchers("/api/transactions/**").hasRole(USER.name())
                 .antMatchers(HttpMethod.GET,"/api/user/**").hasAuthority(USER_READ.name())
                 .anyRequest()
-                .authenticated()
-                .and()
+                .authenticated();
+                /*.and()
                 .formLogin()
                     .loginPage("/login")
                     .permitAll()
@@ -63,7 +62,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .clearAuthentication(true)
                     .invalidateHttpSession(true)
                     .deleteCookies("JSESSIONID")
-                    .logoutSuccessUrl("/login");
+                    .logoutSuccessUrl("/login");*/
     }
 
     @Override
@@ -78,68 +77,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         provider.setUserDetailsService(userService);
         return provider;
     }
-
-    /*private final UserDetailsService userDetailsService;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    private static final String[] AUTH_WHITELIST = {
-            "/v3/api-docs/**",
-            "/swagger-ui/**",
-            "/api/registration/**",
-            "/login*",
-            "/login",
-            "/api/user/perform_login*",
-            "/api/login/**"
-    };
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean());
-        customAuthenticationFilter.setFilterProcessesUrl("/api/login");
-
-        http.csrf().disable();
-        http.sessionManagement().sessionCreationPolicy(STATELESS);
-        http.authorizeRequests().antMatchers(AUTH_WHITELIST).permitAll();
-        http.authorizeRequests().antMatchers(HttpMethod.GET, "/js/**", "/css/**", "/img/**").permitAll();
-        http.authorizeRequests().antMatchers("/admin/**").hasRole(UserRole.ADMIN.name());
-        http.authorizeRequests().antMatchers("/home*").hasRole(UserRole.USER.name());
-        http.authorizeRequests().anyRequest().authenticated();
-        http.formLogin().loginPage("/login.html");
-        http.formLogin().defaultSuccessUrl("/home.html");
-        http.formLogin().failureUrl("/login.html?error=true");
-        http.formLogin().successHandler(authenticationSuccessHandler());
-        http.formLogin().failureHandler(authenticationFailureHandler());
-        http.addFilter(customAuthenticationFilter);
-        http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
-*//*
-        .logout()
-        .logoutUrl("/perform_logout")
-        .deleteCookies("JSESSIONID")
-        .invalidateHttpSession(true);
-        //.logoutSuccessHandler(logoutSuccesHandler());*//*
-    }
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
-    }
-
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
-
-    @Bean
-    public AuthenticationSuccessHandler authenticationSuccessHandler(){
-        System.out.println("SUCCES");
-        return new CustomSuccesAuthenticationHandler();
-    }
-
-    @Bean
-    public AuthenticationFailureHandler authenticationFailureHandler(){
-        System.out.println("FAILURE");
-        return new CustomFailureAuthenticationHandler();
-    }*/
 }
 

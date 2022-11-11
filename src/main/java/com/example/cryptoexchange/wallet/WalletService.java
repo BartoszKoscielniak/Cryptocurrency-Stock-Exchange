@@ -8,4 +8,9 @@ import org.springframework.stereotype.Service;
 public class WalletService {
 
     WalletRepository walletRepository;
+
+    public void correctFunds(Wallet wallet , double due) {
+        wallet.setFiatQuantity( wallet.getFiatQuantity() +  due);
+        walletRepository.save( wallet );
+    }
 }

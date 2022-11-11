@@ -26,4 +26,41 @@ public class WalletDetails {
     @JoinColumn(name = "cryptocurrency_id")
     private Cryptocurrency cryptocurrency;
 
+    public WalletDetails(Double quantity , Wallet wallet , Cryptocurrency cryptocurrency) {
+        this.quantity = quantity;
+        this.wallet = wallet;
+        this.cryptocurrency = cryptocurrency;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Double getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Double quantity) {
+        this.quantity = quantity;
+    }
+
+    public Wallet getWallet() {
+        return wallet;
+    }
+
+    public void setWallet(Wallet wallet) {
+        this.wallet = wallet;
+    }
+
+    public Cryptocurrency getCryptocurrency() {
+        return cryptocurrency;
+    }
+
+    public void setCryptocurrency(Cryptocurrency cryptocurrency) {
+        this.cryptocurrency = cryptocurrency;
+    }
 }

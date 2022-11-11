@@ -1,5 +1,7 @@
 package com.example.cryptoexchange.user;
 
+import com.example.cryptoexchange.wallet.Wallet;
+import com.example.cryptoexchange.wallet.WalletRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +19,7 @@ public class UserConfig {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Bean
-    CommandLineRunner commandLineRunner (UserRepository repository) {
+    CommandLineRunner commandLineRunner (UserRepository repository, WalletRepository walletRepository) {
         return args -> {
             User Bartosz = new User(
                     "Bartosz",
@@ -45,9 +47,24 @@ public class UserConfig {
                     true
             );
 
+            Wallet wallet1 = new Wallet(500.0);
+            Wallet wallet2 = new Wallet(500.0);
+
+            wallet1.setUser( Bartosz );
+            wallet2.setUser( Adam );
+
+            walletRepository.saveAll(
+                    List.of(wallet1, wallet2)
+            );
+
+            Bartosz.setWallet( wallet1 );
+            Adam.setWallet( wallet2 );
+
             repository.saveAll(
                     List.of(Bartosz, Adam)
             );
+
+
         };
     }
 

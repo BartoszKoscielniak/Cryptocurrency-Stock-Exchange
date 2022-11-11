@@ -11,6 +11,6 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public interface CryptocurrencyRepository extends JpaRepository<Cryptocurrency, Long> {
 
-    @Query("SELECT c FROM Cryptocurrency c WHERE c.symbol=?1")
-    Optional<Cryptocurrency> findCryptocurrencyBySymbol(String symbol);
+    @Query("SELECT c FROM Cryptocurrency c WHERE c.cryptoId=?1")
+    Optional<Cryptocurrency> findCryptocurrencyByCryptoId(String cryptoId);
 }

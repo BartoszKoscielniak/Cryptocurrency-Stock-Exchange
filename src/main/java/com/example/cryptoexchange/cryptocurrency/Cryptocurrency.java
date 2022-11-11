@@ -20,7 +20,7 @@ public class Cryptocurrency {
     )
     Long id;
     String name;
-    String symbol;
+    String cryptoId;
 
     @OneToMany(mappedBy = "cryptocurrency")
     Set<WalletDetails> walletDetails;
@@ -28,9 +28,9 @@ public class Cryptocurrency {
     @OneToMany(mappedBy = "cryptocurrency")
     Set<Transactions> transactions;
 
-    public Cryptocurrency(String name, String symbol) {
+    public Cryptocurrency(String name, String cryptoId) {
         this.name = name;
-        this.symbol = symbol;
+        this.cryptoId = cryptoId;
     }
 
     public Long getId( ) {
@@ -49,12 +49,12 @@ public class Cryptocurrency {
         this.name = name;
     }
 
-    public String getSymbol( ) {
-        return symbol;
+    public String getCryptoId( ) {
+        return cryptoId;
     }
 
-    public void setSymbol(String symbol) {
-        this.symbol = symbol;
+    public void setCryptoId(String cryptoId) {
+        this.cryptoId = cryptoId;
     }
 
     @Override
@@ -62,7 +62,7 @@ public class Cryptocurrency {
         return "Cryptocurrency{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", symbol='" + symbol + '\'' +
+                ", symbol='" + cryptoId + '\'' +
                 '}';
     }
 }

@@ -18,7 +18,7 @@ public class Wallet {
     @Id
     @Column(name = "user_id")
     Long id;
-    Float fiatQuantity;
+    Double fiatQuantity;
 
     @OneToOne
     @MapsId
@@ -31,5 +31,47 @@ public class Wallet {
     @OneToMany(mappedBy = "wallet")
     private Set<Transactions> transactions;
 
+    public Wallet(Double fiatQuantity) {
+        this.fiatQuantity = fiatQuantity;
+    }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Double getFiatQuantity() {
+        return fiatQuantity;
+    }
+
+    public void setFiatQuantity(Double fiatQuantity) {
+        this.fiatQuantity = fiatQuantity;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Set<WalletDetails> getWalletDetails() {
+        return walletDetails;
+    }
+
+    public void setWalletDetails(Set<WalletDetails> walletDetails) {
+        this.walletDetails = walletDetails;
+    }
+
+    public Set<Transactions> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(Set<Transactions> transactions) {
+        this.transactions = transactions;
+    }
 }

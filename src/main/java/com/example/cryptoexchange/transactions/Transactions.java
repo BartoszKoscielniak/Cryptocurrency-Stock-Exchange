@@ -32,6 +32,12 @@ public class Transactions {
     @JoinColumn(name = "wallet_id")
     private Wallet wallet;
 
-
-
+    public Transactions(LocalDateTime transactionDate , TransactionsStatus transactionsStatus , Double quantity , Double exchangeRate , Cryptocurrency cryptocurrency , Wallet wallet) {
+        this.transactionDate = transactionDate;
+        this.transactionsStatus = transactionsStatus;
+        this.quantity = quantity;
+        this.exchangeRate = exchangeRate;
+        this.cryptocurrency = cryptocurrency;
+        this.wallet = wallet;
+    }
 }
