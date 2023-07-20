@@ -7,15 +7,18 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.context.annotation.Configuration;
 
+import static org.springframework.security.config.Elements.JWT;
+
 @Configuration
 @SecurityScheme(
-        name = "basicAuth", // can be set to anything
+        name = "Bearer Auth",
         type = SecuritySchemeType.HTTP,
-        scheme = "basic"
+        scheme = "bearer",
+        bearerFormat = JWT
 )
 @OpenAPIDefinition(
-        info = @Info(title = "Sample API", version = "v1"),
-        security = @SecurityRequirement(name = "basicAuth") // references the name defined in the line 3
+        info = @Info(title = "Cryptocurrency", version = "v1"),
+        security = @SecurityRequirement(name = "Bearer Auth")
 )
 class OpenApiConfig {
 

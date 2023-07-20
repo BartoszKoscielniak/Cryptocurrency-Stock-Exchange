@@ -20,7 +20,7 @@ import static com.example.cryptoexchange.user.UserPermissions.USER_READ;
 import static com.example.cryptoexchange.user.UserRole.USER;
 
 @Configuration
-@EnableWebSecurity/*TODO: use when using preauthorize annotations in controller */
+@EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final PasswordEncoder passwordEncoder;

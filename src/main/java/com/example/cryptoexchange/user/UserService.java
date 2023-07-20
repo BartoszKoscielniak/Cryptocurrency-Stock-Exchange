@@ -19,7 +19,7 @@ import java.util.*;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
-    private final static String USER_NOT_FOUND = "User: %s not found";
+    private static final String USER_NOT_FOUND = "User: %s not found";
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ConfirmationTokenService confirmationTokenService;
 

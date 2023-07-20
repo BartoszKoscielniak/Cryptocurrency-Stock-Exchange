@@ -1,5 +1,6 @@
 package com.example.cryptoexchange.ViewsControllers.buysell;
 
+import com.example.cryptoexchange.config.Response;
 import com.example.cryptoexchange.cryptocurrency.Cryptocurrency;
 import com.example.cryptoexchange.cryptocurrency.CryptocurrencyService;
 import com.example.cryptoexchange.externalRequests.CGCryptocurrency;
@@ -9,12 +10,14 @@ import com.example.cryptoexchange.transactions.TransactionsStatus;
 import com.example.cryptoexchange.user.User;
 import com.example.cryptoexchange.wallet.Wallet;
 import com.example.cryptoexchange.wallet.WalletService;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Map;
 
 @Service
 public class BuySellService {
@@ -57,13 +60,12 @@ public class BuySellService {
         }
     }
 
-    public Double sellQuantity(String id) {
+    public Map<String, String> sellQuantity(String id) {
 //TODO:sell quantity
-        return 0.0;
+        return Response.successResposne(HttpStatus.OK, String.valueOf(0));
     }
 
-    public String buyCrypto(String cryptoId , String paymentType , Double quantity) {
-        String result = "success";
+    public Map<String, String> buyCrypto(String cryptoId , String paymentType , Double quantity) {
 
         CGCryptocurrency[] cgCryptocurrencies = cgCryptocurrencyService.getCurrencyInformations( cryptoId );
         if ( paymentType.equals( "wallet" ) ) {
@@ -71,19 +73,19 @@ public class BuySellService {
 
             Double due = cgCryptocurrencies[0].getCurrentPrice() * quantity;
             if ( due >  wallet.getFiatQuantity() ){
-                return "Insufficient funds";
+                return Response.failureResposne(HttpStatus.BAD_REQUEST, "Insufficient funds");
             }
 
             Cryptocurrency cryptocurrency = cryptocurrencyService.addCrypto( cgCryptocurrencies[0].getId(), cgCryptocurrencies[0].getName() );
             transactionsService.addTransaction(cryptocurrency, wallet, quantity, cgCryptocurrencies[0].getCurrentPrice(), TransactionsStatus.BOUGHT );
             walletService.correctFunds(wallet, -(due));
 
-        } else {
+        } else {//TODO: payment in another crypto - exchange -
 
-            return "Not provided payment method";//TODO:quantity payment type
+            return Response.failureResposne(HttpStatus.BAD_REQUEST, "Not provided payment method");
         }
 
-        return result;
+        return Response.successResposne(HttpStatus.OK, "ok");
     }
 
 }
